@@ -10,4 +10,9 @@ function findUser(id) {
      return users.find(user => user.id === id)
 }
 
-module.exports = {joinUser,findUser}
+function removeUser(id) {
+     index = users.findIndex(user => user.id == id)
+     users.splice(index,1)[0]
+}
+
+module.exports = {joinUser,findUser,removeUser}

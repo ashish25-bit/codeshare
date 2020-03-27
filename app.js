@@ -2,8 +2,8 @@ const express = require('express')
 const path = require('path')
 const socketio = require('socket.io') 
 const http = require('http')
-const {findRoom,createRoom} = require('./utils/rooms')
-const {joinUser,findUser} = require('./utils/users')
+const {findRoom,createRoom,obtainCode,updateCode} = require('./utils/rooms')
+const {joinUser,findUser,removeUser} = require('./utils/users')
 
 const app = express()
 const server = http.createServer(app)
@@ -33,8 +33,9 @@ app.get('/join' , (req,res) => {
 
 app.get('/create' , (req,res) => {
     room = req.query.name
-    if(!findRoom(room)){
-        createRoom(room)
+    if(!findRoom(room)) {
+        c = ''
+        createRoom(room,c)
         res.sendFile(path.join(__dirname, 'public/code.html'))
     }
     else {
@@ -45,18 +46,23 @@ app.get('/create' , (req,res) => {
 })
 
 io.on('connection' , socket => {
-
     // to join the user in a specific room group
     socket.on('joinRoom' , room => {
         const user = joinUser(socket.id,room.name)
-        socket.join(user.room)
+        socket.join(user.room)  
+        code = obtainCode(room.name)
+        socket.emit('message' , code.code)
     })
 
     // send the message to all the users connected in the room
     socket.on('codeMsg' , code => {
         const user = findUser(socket.id)
         io.to(user.room).emit('message' , code)
+        updateCode(user.room,code)
     })
+
+    socket.on('disconnect' , () => removeUser(socket.id))
+
 })
 
 const PORT = process.env.PORT || 3000
