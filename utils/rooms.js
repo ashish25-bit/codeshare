@@ -1,5 +1,5 @@
-let rooms = ['Ashish']
-let codes = [{room : 'Ashish' , code : ''}]
+let rooms = []
+let codes = []
 
 function findRoom(room) {
     return (rooms.includes(room))
@@ -21,4 +21,10 @@ function updateCode(room,c) {
     codes[codeIndex].code = c
 }
 
-module.exports = {findRoom,createRoom,obtainCode,updateCode}
+function deleteRoom(room) {
+    index = rooms.indexOf(room)
+    rooms.splice(index,1)
+    codes.splice(index,1)[0]
+}
+
+module.exports = {findRoom,createRoom,obtainCode,updateCode,deleteRoom}

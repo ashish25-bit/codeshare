@@ -2,7 +2,7 @@ const express = require('express')
 const path = require('path')
 const socketio = require('socket.io') 
 const http = require('http')
-const {findRoom,createRoom,obtainCode,updateCode} = require('./utils/rooms')
+const {findRoom,createRoom,obtainCode,updateCode,deleteRoom} = require('./utils/rooms')
 const {joinUser,findUser,removeUser} = require('./utils/users')
 
 const app = express()
